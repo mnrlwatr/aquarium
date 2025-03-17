@@ -3,8 +3,8 @@ package org.fp.service.creation;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.fp.model.Position;
-import org.fp.model.Fish;
-import org.fp.model.enums.Gender;
+import org.fp.model.fish.Fish;
+import org.fp.model.fish.enums.Gender;
 
 import java.util.concurrent.ThreadLocalRandom;
 

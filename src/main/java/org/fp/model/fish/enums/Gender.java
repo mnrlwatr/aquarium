@@ -1,4 +1,4 @@
-package org.fp.model.enums;
+package org.fp.model.fish.enums;
 
 public enum Gender {
     MALE,

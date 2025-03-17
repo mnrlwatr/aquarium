@@ -5,7 +5,7 @@ import lombok.experimental.FieldDefaults;
 import org.fp.DependencyContainer;
 import org.fp.exception.AquariumIsNotWorkingException;
 import org.fp.model.Position;
-import org.fp.model.Fish;
+import org.fp.model.fish.Fish;
 import org.fp.service.creation.RandomDirection;
 import org.fp.service.creation.RandomFishReproduce;
 import org.fp.service.creation.RandomPosition;

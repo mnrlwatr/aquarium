@@ -3,6 +3,8 @@ package org.fp.model;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
+import org.fp.model.fish.Fish;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -17,6 +19,6 @@ public class Aquarium {
     @NonFinal
     @Setter
     volatile boolean working = false; // сеттер одновременно из разных потоков не вызывается
-    ConcurrentMap<Position,Fish> fishes = new ConcurrentHashMap<>();
+    ConcurrentMap<Position, Fish> fishes = new ConcurrentHashMap<>();
 
 }

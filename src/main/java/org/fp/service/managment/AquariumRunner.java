@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.fp.DependencyContainer;
 import org.fp.model.Aquarium;
-import org.fp.model.Fish;
+import org.fp.model.fish.Fish;
 import org.fp.service.FishLive;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
