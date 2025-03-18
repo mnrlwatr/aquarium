@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import org.fp.model.Position;
 import org.fp.model.fish.Fish;
 import org.fp.model.fish.enums.Gender;
+import org.fp.model.fish.enums.Type;
 
 import java.util.concurrent.ThreadLocalRandom;
 

@@ -15,7 +15,6 @@ public class Fish {
     @Setter // вызывается только из одного потока (FishLive Thread)
     volatile int lifetime; // в секундах
     final Gender gender;
-    final Type type ;
     volatile Position position;
 
     public synchronized void setPosition(Position position) {
