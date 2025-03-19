@@ -12,6 +12,15 @@ import java.util.concurrent.ConcurrentMap;
 public class AquariumController {
 
     Aquarium currentAquarium;
+
+    /*
+    *  ConcurrentHashMap это временное решение.
+    *  Есть идея с использованием TreeMap где можно быстро ( O(log n) ) определять является ли позиция свободным или занятым,
+    *  в начале инициализации аквариума надо будет заполнить TreeMap<K,V> (может быть трудозатратной операцией)
+    *  где K это сгенерированный номер на основе позиции, а V - сам объект Position.
+    *  Алгоритм для генерации Key будет = (Position.y * Aquarium.height) + Position.x
+    *
+    * */
     ConcurrentMap<Position, Fish> fishesMap;
 
     public AquariumController(Aquarium currentAquarium) {
