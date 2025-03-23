@@ -5,10 +5,11 @@ import lombok.experimental.FieldDefaults;
 import org.fp.DependencyContainer;
 import org.fp.exception.AquariumIsNotWorkingException;
 import org.fp.model.Position;
-import org.fp.model.fish.Fish;
-import org.fp.service.creation.RandomDirection;
-import org.fp.service.creation.RandomFishReproduce;
-import org.fp.service.creation.RandomPosition;
+import org.fp.model.fish.AbstractFish;
+import org.fp.model.fish.ClownFish;
+import org.fp.service.creation.coordination.RandomDirection;
+import org.fp.service.creation.fish.FishFactory;
+import org.fp.service.creation.coordination.RandomPosition;
 import org.fp.service.managment.AquariumController;
 import org.fp.service.statistics.FishStatistics;
 
@@ -16,12 +17,13 @@ import java.util.concurrent.TimeUnit;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class FishLive implements Runnable {
-    static AquariumController aquariumController = (AquariumController) DependencyContainer.getDependency("aquariumController1");
-    static FishStatistics fishStatistics = (FishStatistics) DependencyContainer.getDependency("FishLifeStatistics1");
-    Fish fish;
+    AquariumController aquariumController = (AquariumController) DependencyContainer.getDependency("aquariumController1");
+    FishStatistics fishStatistics = (FishStatistics) DependencyContainer.getDependency("FishLifeStatistics1");
+    FishFactory fishFactory = (FishFactory) DependencyContainer.getDependency("FishFactory1");
+    AbstractFish fish;
     Movement movement; // композиция (двигаться можешь только если есть жизнь)
 
-    public FishLive(Fish fish) {
+    public FishLive(AbstractFish fish) {
         this.fish = fish;
         movement = new Movement();
         new Thread(this).start(); // Каждая рыба должна быть в отдельном потоке.(Thread)
@@ -55,7 +57,7 @@ public class FishLive implements Runnable {
     private class Movement {
         public void randomMove() throws AquariumIsNotWorkingException {
             Position positionToMove = getPositionToMove();
-            Fish f2 = aquariumController.moveIfPositionFree(positionToMove, fish);
+            ClownFish f2 = (ClownFish) aquariumController.moveIfPositionFree(positionToMove, fish);
             if (f2 == null) {
                 aquariumController.releasePosition(fish.getPosition());
                 fish.setPosition(positionToMove);
@@ -65,13 +67,13 @@ public class FishLive implements Runnable {
             }
         }
 
-        private boolean checkGenderEquals(Fish anotherFish) {
+        private boolean checkGenderEquals(AbstractFish anotherFish) {
             return anotherFish.getGender().equals(fish.getGender());
         }
 
         // todo процесс рождения, размещения, оживления новорожденной рыбы надо вынести в AquariumFill
         private void bornRandomFish() throws AquariumIsNotWorkingException {
-            Fish newBornFish = RandomFishReproduce.reproduce();
+            AbstractFish newBornFish = fishFactory.create("ClownFish");
 
             // пытаемся разместить рыбу на свободное место в аквариуме
             while ((aquariumController.moveIfPositionFree(newBornFish.getPosition(), newBornFish)) != null) {

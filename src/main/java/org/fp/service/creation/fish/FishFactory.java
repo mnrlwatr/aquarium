@@ -1,20 +1,24 @@
-package org.fp.service.creation;
+package org.fp.service.creation.fish;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.fp.model.Position;
-import org.fp.model.fish.Fish;
+import org.fp.model.fish.AbstractFish;
+import org.fp.model.fish.ClownFish;
 import org.fp.model.fish.enums.Gender;
-import org.fp.model.fish.enums.Type;
+import org.fp.service.creation.SeaCreatureFactory;
+import org.fp.service.creation.coordination.RandomPosition;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-public final class RandomFishReproduce {
-    static ThreadLocalRandom random=ThreadLocalRandom.current();
-    private RandomFishReproduce(){}
-
-    public static synchronized Fish reproduce (){
+public class FishFactory implements SeaCreatureFactory {
+    ThreadLocalRandom random = ThreadLocalRandom.current();
+    /**
+     * @return An initialized instance of classes that inherit from AbstractFish with random position,gender and lifetime
+    * */
+    @Override
+    public synchronized AbstractFish create(String type){
         Position randomPosition = RandomPosition.getPosition();
 
         // Пол каждой новорожденной рыбы определяется методом Random
@@ -24,6 +28,10 @@ public final class RandomFishReproduce {
         // У каждой рыбы своя продолжительность жизни, и ее длина определяется методом Random.
         int lifeTime = random.nextInt(8,14); // можно калибровать, долгая жизнь=большая рождаемость / короткая жизнь=больше смертей
 
-        return new Fish(lifeTime,fishGender,randomPosition);
+        if(type.equals("ClownFish")){
+            return new ClownFish(lifeTime,randomPosition,fishGender);
+        } else {
+            throw new IllegalArgumentException("Unsupported type of Fish: " + type);
+        }
     }
 }

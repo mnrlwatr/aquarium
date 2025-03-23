@@ -1,5 +1,6 @@
 package org.fp;
-import org.fp.service.creation.RandomAquariumCreate;
+import org.fp.service.creation.SeaCreatureFactoryProducer;
+import org.fp.service.creation.aquarium.RandomAquariumFactory;
 import org.fp.service.managment.AquariumController;
 import org.fp.model.Aquarium;
 import org.fp.service.managment.AquariumFill;
@@ -10,11 +11,14 @@ public class Main {
     static final String LINE_SEPARATOR ="*************************************************************";
     public static void main(String[] args) {
 
-        Aquarium aquarium1 = RandomAquariumCreate.create();
+        Aquarium aquarium1 = RandomAquariumFactory.create();
         System.out.println("Aquarium created = "+aquarium1);
+
+        DependencyContainer.addDependency("FishFactory1", SeaCreatureFactoryProducer.getFactory(SeaCreatureFactoryProducer.SeaCreatureFactoryType.Fish));
         DependencyContainer.addDependency("aquariumController1", new AquariumController(aquarium1));
         DependencyContainer.addDependency("FishLifeStatistics1",new FishStatistics());
-        AquariumFill.fillAquarium(aquarium1);
+
+        AquariumFill.fillFish(aquarium1,"ClownFish");
         System.out.println(LINE_SEPARATOR);
         AquariumRunner aquariumRunner = new AquariumRunner(aquarium1);
         aquariumRunner.run();

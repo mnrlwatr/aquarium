@@ -5,7 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.fp.DependencyContainer;
 import org.fp.model.Aquarium;
-import org.fp.model.fish.Fish;
+import org.fp.model.SeaCreature;
+import org.fp.model.fish.AbstractFish;
 import org.fp.service.FishLive;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -22,8 +23,8 @@ public class AquariumRunner {
         if (!aquarium.isWorking()) {
             aquarium.setWorking(true);
             new Observer();
-            for (Fish fish : aquarium.getFishes().values()) {
-                new FishLive(fish);
+            for (SeaCreature fish : aquarium.getSeaCreaturesMap().values()) {
+                new FishLive((AbstractFish) fish);
             }
         } else {
             throw new IllegalStateException("Current Aquarium is already running ");

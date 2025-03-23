@@ -1,4 +1,4 @@
-package org.fp.service.creation;
+package org.fp.service.creation.aquarium;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -7,9 +7,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import static org.fp.constant.Constants.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public final class RandomAquariumCreate {
+public final class RandomAquariumFactory {
     static ThreadLocalRandom random=ThreadLocalRandom.current();
-    private RandomAquariumCreate() {
+    private RandomAquariumFactory() {
     }
 
     /**

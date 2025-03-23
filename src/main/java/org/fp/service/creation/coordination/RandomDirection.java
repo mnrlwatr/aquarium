@@ -1,4 +1,4 @@
-package org.fp.service.creation;
+package org.fp.service.creation.coordination;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;

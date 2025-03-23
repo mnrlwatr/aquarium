@@ -5,7 +5,8 @@ import lombok.experimental.FieldDefaults;
 import org.fp.exception.AquariumIsNotWorkingException;
 import org.fp.model.Position;
 import org.fp.model.Aquarium;
-import org.fp.model.fish.Fish;
+import org.fp.model.SeaCreature;
+
 import java.util.concurrent.ConcurrentMap;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -21,42 +22,42 @@ public class AquariumController {
     *  Алгоритм для генерации Key будет = (Position.y * Aquarium.height) + Position.x
     *
     * */
-    ConcurrentMap<Position, Fish> fishesMap;
+    ConcurrentMap<Position, SeaCreature> seaCreaturesMap;
 
     public AquariumController(Aquarium currentAquarium) {
         this.currentAquarium = currentAquarium;
-        fishesMap = this.currentAquarium.getFishes();
+        seaCreaturesMap = this.currentAquarium.getSeaCreaturesMap();
     }
 
     public boolean isPositionFree(Position position) {
-        return !fishesMap.containsKey(position);
+        return !seaCreaturesMap.containsKey(position);
     }
     /**
-     * @return  null if fish moved to positionToMove, if positionToMove is not free then returns fish which is holding that position.
+     * @return  null if seaCreature moved to positionToMove, if positionToMove is not free then returns seaCreature which is holding that position.
      * @throws  AquariumIsNotWorkingException if there was attempt to move fish when Aquarium is stopped
      * */
-    public Fish moveIfPositionFree(Position positionToMove, Fish fish) throws AquariumIsNotWorkingException {
+    public SeaCreature moveIfPositionFree(Position positionToMove, SeaCreature seaCreature) throws AquariumIsNotWorkingException {
         if(currentAquarium.isWorking()){
-            return fishesMap.putIfAbsent(positionToMove, fish);
+            return seaCreaturesMap.putIfAbsent(positionToMove, seaCreature);
         } else {
             throw new AquariumIsNotWorkingException();
         }
     }
 
-    public boolean placeFish (Fish fish){
-        return fishesMap.putIfAbsent(fish.getPosition(), fish)==null;
+    public boolean placeSeaCreature(SeaCreature seaCreature){
+        return seaCreaturesMap.putIfAbsent(seaCreature.getPosition(), seaCreature)==null;
     }
 
     public boolean isAquariumEmpty() {
-        return fishesMap.isEmpty();
+        return seaCreaturesMap.isEmpty();
     }
 
     public boolean isAquariumFull() {
-        return fishesMap.size() >= currentAquarium.getCapacity();
+        return seaCreaturesMap.size() >= currentAquarium.getCapacity();
     }
 
-    public Fish releasePosition(Position position) {
-        return fishesMap.remove(position);
+    public SeaCreature releasePosition(Position position) {
+        return seaCreaturesMap.remove(position);
     }
 
     public int getAquariumLength(){
