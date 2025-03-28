@@ -6,7 +6,7 @@ import org.fp.DependencyContainer;
 import org.fp.model.Aquarium;
 import org.fp.model.fish.AbstractFish;
 import org.fp.service.creation.fish.FishFactory;
-import org.fp.service.creation.coordination.RandomPosition;
+import org.fp.service.util.RandomPosition;
 import java.util.concurrent.ThreadLocalRandom;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public final class AquariumFill {

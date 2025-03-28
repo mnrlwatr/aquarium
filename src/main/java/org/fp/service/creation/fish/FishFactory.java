@@ -7,7 +7,7 @@ import org.fp.model.fish.AbstractFish;
 import org.fp.model.fish.ClownFish;
 import org.fp.model.fish.enums.Gender;
 import org.fp.service.creation.SeaCreatureFactory;
-import org.fp.service.creation.coordination.RandomPosition;
+import org.fp.service.util.RandomPosition;
 
 import java.util.concurrent.ThreadLocalRandom;
 

@@ -4,11 +4,9 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.fp.DependencyContainer;
 import org.fp.exception.AquariumIsNotWorkingException;
-import org.fp.model.Position;
 import org.fp.model.fish.AbstractFish;
-import org.fp.service.creation.coordination.RandomDirection;
 import org.fp.service.creation.fish.FishFactory;
-import org.fp.service.creation.coordination.RandomPosition;
+import org.fp.service.util.RandomPosition;
 import org.fp.service.managment.AquariumController;
 import org.fp.service.statistics.FishStatistics;
 
@@ -33,7 +31,7 @@ public class FishLive implements Runnable {
         while (aquariumController.isAquariumWorking()) {
             if (abstractFish.getLifetime() > 0) {
                 try {
-                    movement.move();
+                    movement.randomMove();
                 } catch (AquariumIsNotWorkingException e) {
                     break;
                 }
@@ -54,17 +52,11 @@ public class FishLive implements Runnable {
     }
 
     private class Movement {
-        public void move() throws AquariumIsNotWorkingException {
+
+        public void randomMove() throws AquariumIsNotWorkingException {
             abstractFish.randomMove();
         }
-
-        // три метода(checkGender,bornRandomFish,GetPositiontomove) вынесу в утилитный классы, а пока для теста пусть тут побудут
-
-        private boolean checkGenderEquals(AbstractFish anotherFish) {
-            return anotherFish.getGender().equals(abstractFish.getGender());
-        }
-
-        // todo процесс рождения, размещения, оживления новорожденной рыбы надо вынести в AquariumFill
+        // todo процесс рождения, размещения, оживления новорожденной рыбы надо вынести в утилитный класс
         private void bornRandomFish() throws AquariumIsNotWorkingException {
             AbstractFish newBornFish = fishFactory.create("ClownFish");
 
@@ -77,18 +69,5 @@ public class FishLive implements Runnable {
             new FishLive(newBornFish);
         }
 
-        private Position getPositionToMove() {
-            while (true) {
-                Position direction = RandomDirection.getDirection();
-                int newX = abstractFish.getPosition().getX() + direction.getX();
-                int newY = abstractFish.getPosition().getY() + direction.getY();
-                // новое позиция для перемещения не должно выходит за рамки аквариума
-                boolean x = (newX >= 0) && (newX <= aquariumController.getAquariumLength());
-                boolean y = (newY >= 0) && (newY <= aquariumController.getAquariumHeight());
-                if (x && y) {
-                    return new Position(newX, newY);
-                }
-            }
-        }
     }
 }
