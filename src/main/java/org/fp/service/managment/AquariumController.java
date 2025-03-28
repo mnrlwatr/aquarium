@@ -6,7 +6,6 @@ import org.fp.exception.AquariumIsNotWorkingException;
 import org.fp.model.Position;
 import org.fp.model.Aquarium;
 import org.fp.model.SeaCreature;
-
 import java.util.concurrent.ConcurrentMap;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -45,7 +44,10 @@ public class AquariumController {
     }
 
     public boolean placeSeaCreature(SeaCreature seaCreature){
-        return seaCreaturesMap.putIfAbsent(seaCreature.getPosition(), seaCreature)==null;
+        if(seaCreature.getPosition().getClass() == Position.class){
+            return seaCreaturesMap.putIfAbsent((Position)seaCreature.getPosition(), seaCreature)==null;
+        }
+        throw new IllegalArgumentException("Invalid Position class");
     }
 
     public boolean isAquariumEmpty() {

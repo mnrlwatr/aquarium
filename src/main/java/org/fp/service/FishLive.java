@@ -6,7 +6,6 @@ import org.fp.DependencyContainer;
 import org.fp.exception.AquariumIsNotWorkingException;
 import org.fp.model.Position;
 import org.fp.model.fish.AbstractFish;
-import org.fp.model.fish.ClownFish;
 import org.fp.service.creation.coordination.RandomDirection;
 import org.fp.service.creation.fish.FishFactory;
 import org.fp.service.creation.coordination.RandomPosition;
@@ -20,11 +19,11 @@ public class FishLive implements Runnable {
     AquariumController aquariumController = (AquariumController) DependencyContainer.getDependency("aquariumController1");
     FishStatistics fishStatistics = (FishStatistics) DependencyContainer.getDependency("FishLifeStatistics1");
     FishFactory fishFactory = (FishFactory) DependencyContainer.getDependency("FishFactory1");
-    AbstractFish fish;
+    AbstractFish abstractFish;
     Movement movement; // композиция (двигаться можешь только если есть жизнь)
 
-    public FishLive(AbstractFish fish) {
-        this.fish = fish;
+    public FishLive(AbstractFish abstractFish) {
+        this.abstractFish = abstractFish;
         movement = new Movement();
         new Thread(this).start(); // Каждая рыба должна быть в отдельном потоке.(Thread)
     }
@@ -32,13 +31,13 @@ public class FishLive implements Runnable {
     @Override
     public void run() {
         while (aquariumController.isAquariumWorking()) {
-            if (fish.getLifetime() > 0) {
+            if (abstractFish.getLifetime() > 0) {
                 try {
-                    movement.randomMove();
+                    movement.move();
                 } catch (AquariumIsNotWorkingException e) {
                     break;
                 }
-                fish.setLifetime(fish.getLifetime() - 1);
+                abstractFish.setLifetime(abstractFish.getLifetime() - 1);
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
@@ -46,29 +45,23 @@ public class FishLive implements Runnable {
                     break;
                 }
             } else {
-                aquariumController.releasePosition(fish.getPosition());
+                aquariumController.releasePosition(abstractFish.getPosition());
                 fishStatistics.incrementTotalDied();
-                System.out.println(fish + " is Dead"); // Отчет о каждом процессе должен отображаться в консоли.
+                System.out.println(abstractFish + " is Dead"); // Отчет о каждом процессе должен отображаться в консоли.
                 break;
             }
         }
     }
 
     private class Movement {
-        public void randomMove() throws AquariumIsNotWorkingException {
-            Position positionToMove = getPositionToMove();
-            ClownFish f2 = (ClownFish) aquariumController.moveIfPositionFree(positionToMove, fish);
-            if (f2 == null) {
-                aquariumController.releasePosition(fish.getPosition());
-                fish.setPosition(positionToMove);
-                fishStatistics.incrementTotalMovements();
-            } else if (!checkGenderEquals(f2)) { //Если самцы и самки встречаются, они должны размножаться.
-                bornRandomFish();
-            }
+        public void move() throws AquariumIsNotWorkingException {
+            abstractFish.randomMove();
         }
 
+        // три метода(checkGender,bornRandomFish,GetPositiontomove) вынесу в утилитный классы, а пока для теста пусть тут побудут
+
         private boolean checkGenderEquals(AbstractFish anotherFish) {
-            return anotherFish.getGender().equals(fish.getGender());
+            return anotherFish.getGender().equals(abstractFish.getGender());
         }
 
         // todo процесс рождения, размещения, оживления новорожденной рыбы надо вынести в AquariumFill
@@ -85,14 +78,14 @@ public class FishLive implements Runnable {
         }
 
         private Position getPositionToMove() {
-            while (true){
+            while (true) {
                 Position direction = RandomDirection.getDirection();
-                int newX = fish.getPosition().getX() + direction.getX();
-                int newY = fish.getPosition().getY() + direction.getY();
+                int newX = abstractFish.getPosition().getX() + direction.getX();
+                int newY = abstractFish.getPosition().getY() + direction.getY();
                 // новое позиция для перемещения не должно выходит за рамки аквариума
-                boolean x = (newX>=0) && (newX<=aquariumController.getAquariumLength());
-                boolean y = (newY>=0) && (newY<=aquariumController.getAquariumHeight());
-                if(x&&y){
+                boolean x = (newX >= 0) && (newX <= aquariumController.getAquariumLength());
+                boolean y = (newY >= 0) && (newY <= aquariumController.getAquariumHeight());
+                if (x && y) {
                     return new Position(newX, newY);
                 }
             }
