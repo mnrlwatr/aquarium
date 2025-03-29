@@ -2,10 +2,8 @@ package org.fp.model.fish;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.fp.exception.AquariumIsNotWorkingException;
 import org.fp.model.Position;
 import org.fp.model.fish.enums.Gender;
-
 import java.util.concurrent.ConcurrentLinkedQueue;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Axolotl extends AbstractFish {
@@ -18,17 +16,11 @@ public class Axolotl extends AbstractFish {
 
     @Override
     public ConcurrentLinkedQueue<Position> getPosition() {
-        // Not implemented yet
         return positions;
     }
 
     @Override
-    public void randomMove() throws AquariumIsNotWorkingException {
-        // Not implemented yet
-    }
-
-    @Override
-    public Object getRandomPositionToMove() {
+    public Object calculateRandomPositionToMove(int aquariumLength, int aquariumHeight) {
         // Not implemented yet
         return null;
     }

@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import org.fp.DependencyContainer;
 import org.fp.exception.AquariumIsNotWorkingException;
 import org.fp.model.fish.AbstractFish;
+import org.fp.model.fish.ClownFish;
 import org.fp.service.creation.fish.FishFactory;
 import org.fp.service.util.RandomPosition;
 import org.fp.service.managment.AquariumController;
@@ -52,10 +53,18 @@ public class FishLive implements Runnable {
     }
 
     private class Movement {
-
         public void randomMove() throws AquariumIsNotWorkingException {
-            abstractFish.randomMove();
+            Object positionToMove = abstractFish.calculateRandomPositionToMove(aquariumController.getAquariumLength(), aquariumController.getAquariumHeight());
+            ClownFish f2 = (ClownFish) aquariumController.moveIfPositionFree(positionToMove, fish);
+            if (f2 == null) {
+                aquariumController.releasePosition(fish.getPosition());
+                fish.setPosition(positionToMove);
+                fishStatistics.incrementTotalMovements();
+            } else if (!abstractFish.getGender().equals(f2.getGender())) { //Если самцы и самки встречаются, они должны размножаться.
+                bornRandomFish();
+            }
         }
+
         // todo процесс рождения, размещения, оживления новорожденной рыбы надо вынести в утилитный класс
         private void bornRandomFish() throws AquariumIsNotWorkingException {
             AbstractFish newBornFish = fishFactory.create("ClownFish");
