@@ -6,6 +6,8 @@ import org.fp.exception.AquariumIsNotWorkingException;
 import org.fp.model.Position;
 import org.fp.model.Aquarium;
 import org.fp.model.SeaCreature;
+
+import java.util.Queue;
 import java.util.concurrent.ConcurrentMap;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -60,6 +62,9 @@ public class AquariumController {
 
     public SeaCreature releasePosition(Position position) {
         return seaCreaturesMap.remove(position);
+    }
+    public SeaCreature releasePosition(Queue<Position> positions){
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     public int getAquariumLength(){

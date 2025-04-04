@@ -4,24 +4,24 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.fp.model.Position;
 import org.fp.model.fish.enums.Gender;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
+
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class Axolotl extends AbstractFish {
-    ConcurrentLinkedQueue<Position> positions;
+    Queue<Position> positions; // длинная рыба
 
-    public Axolotl(int lifetime, Gender gender, ConcurrentLinkedQueue<Position> positions) {
+    public Axolotl(int lifetime, Gender gender, Queue<Position> positions) {
         super(lifetime, gender);
         this.positions = positions;
     }
 
     @Override
-    public ConcurrentLinkedQueue<Position> getPosition() {
+    public Object getPosition() {
         return positions;
     }
 
     @Override
-    public Object calculateRandomPositionToMove(int aquariumLength, int aquariumHeight) {
-        // Not implemented yet
-        return null;
+    public Queue<Position> calculateRandomPositionToMove(int aquariumLength, int aquariumHeight) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 }
