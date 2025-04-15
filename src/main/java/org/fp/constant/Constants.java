@@ -2,8 +2,8 @@ package org.fp.constant;
 
 public final class Constants {
     // Временно сделал параметры как константы чтобы можно было тестировать проложения
-    // Потом сделаю:параметры будут читаться из json файла и инициализировать поля (json лежит в /resources)
-    // и тут же перед инициализацией параметры будут проверены: 1) MIN_HEIGHT * MIN_LENGTH >= MIN_CAPACITY ; 2) (MAX_HEIGHT-1) * (MAX_LENGTH-1) >= MAX_CAPACITY-1
+    // Потом сделаю:параметры будут читаться из json файла и инициализировать поля (перед инициализацией будет валидация) (json лежит в /resources)
+    // Условия для валидации : 1) MIN_HEIGHT * MIN_LENGTH >= MIN_CAPACITY ; 2) (MAX_HEIGHT-1) * (MAX_LENGTH-1) >= MAX_CAPACITY-1
 
     public static final int RECTANGULAR_AQUARIUM_MIN_HEIGHT = 30;
     public static final int RECTANGULAR_AQUARIUM_MAX_HEIGHT = 50;
