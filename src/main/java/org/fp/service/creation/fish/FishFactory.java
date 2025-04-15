@@ -18,7 +18,7 @@ public class FishFactory implements SeaCreatureFactory {
      * @return An initialized instance of classes that inherit from AbstractFish with random position,gender and lifetime
     * */
     @Override
-    public synchronized AbstractFish create(String type){
+    public synchronized AbstractFish create(Class<?> clazz){
         Position randomPosition = RandomPosition.getPosition();
 
         // Пол каждой новорожденной рыбы определяется методом Random
@@ -28,10 +28,10 @@ public class FishFactory implements SeaCreatureFactory {
         // У каждой рыбы своя продолжительность жизни, и ее длина определяется методом Random.
         int lifeTime = random.nextInt(8,14); // можно калибровать, долгая жизнь=большая рождаемость / короткая жизнь=больше смертей
 
-        if(type.equals("ClownFish")){
+        if(ClownFish.class.equals(clazz)){
             return new ClownFish(lifeTime,randomPosition,fishGender);
         } else {
-            throw new IllegalArgumentException("Unsupported type of Fish: " + type);
+            throw new IllegalArgumentException("Unsupported type of Fish: " + clazz.getSimpleName());
         }
     }
 }

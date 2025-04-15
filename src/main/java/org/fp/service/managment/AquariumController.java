@@ -16,13 +16,13 @@ public class AquariumController {
     Aquarium currentAquarium;
 
     /*
-    *  ConcurrentHashMap это временное решение.
-    *  Есть идея с использованием TreeMap где можно быстро ( O(log n) ) определять является ли позиция свободным или занятым,
-    *  в начале инициализации аквариума надо будет заполнить TreeMap<K,V> (может быть трудозатратной операцией)
-    *  где K это сгенерированный номер на основе позиции, а V - сам объект Position.
-    *  Алгоритм для генерации Key будет = (Position.y * Aquarium.height) + Position.x
-    *
-    * */
+     *  ConcurrentHashMap это временное решение.
+     *  Есть идея с использованием TreeMap где можно быстро ( O(log n) ) определять является ли позиция свободным или занятым,
+     *  в начале инициализации аквариума надо будет заполнить TreeMap<K,V> (может быть трудозатратной операцией)
+     *  где K это сгенерированный номер на основе позиции, а V - сам объект Position.
+     *  Алгоритм для генерации Key будет = (Position.y * Aquarium.height) + Position.x
+     *
+     * */
     ConcurrentMap<Position, SeaCreature> seaCreaturesMap;
 
     public AquariumController(Aquarium currentAquarium) {
@@ -33,23 +33,25 @@ public class AquariumController {
     public boolean isPositionFree(Position position) {
         return !seaCreaturesMap.containsKey(position);
     }
+
     /**
-     * @return  null if seaCreature moved to positionToMove, if positionToMove is not free then returns seaCreature which is holding that position.
-     * @throws  AquariumIsNotWorkingException if there was attempt to move fish when Aquarium is stopped
-     * */
-    public SeaCreature moveIfPositionFree(Position positionToMove, SeaCreature seaCreature) throws AquariumIsNotWorkingException {
-        if(currentAquarium.isWorking()){
-            return seaCreaturesMap.putIfAbsent(positionToMove, seaCreature);
+     * @return null if seaCreature moved to positionToMove, if positionToMove is not free then returns seaCreature which is holding that position.
+     * @throws AquariumIsNotWorkingException if there was attempt to move fish when Aquarium is stopped
+     */
+    public SeaCreature moveIfPositionFree(Object positionToMove, SeaCreature seaCreature) throws AquariumIsNotWorkingException {
+        if (currentAquarium.isWorking()) {
+            return seaCreaturesMap.putIfAbsent((Position) positionToMove, seaCreature); // временное решение
         } else {
             throw new AquariumIsNotWorkingException();
         }
     }
 
-    public boolean placeSeaCreature(SeaCreature seaCreature){
-        if(seaCreature.getPosition().getClass() == Position.class){
-            return seaCreaturesMap.putIfAbsent((Position)seaCreature.getPosition(), seaCreature)==null;
+    public boolean placeSeaCreature(SeaCreature seaCreature) {
+        if (seaCreature.getPosition().getClass() == Position.class) {
+            return seaCreaturesMap.putIfAbsent((Position) seaCreature.getPosition(), seaCreature) == null;
+        } else {
+            throw new IllegalArgumentException();
         }
-        throw new IllegalArgumentException("Invalid Position class");
     }
 
     public boolean isAquariumEmpty() {
@@ -60,21 +62,31 @@ public class AquariumController {
         return seaCreaturesMap.size() >= currentAquarium.getCapacity();
     }
 
-    public SeaCreature releasePosition(Position position) {
+    private SeaCreature releasePosition(Position position) {
         return seaCreaturesMap.remove(position);
     }
-    public SeaCreature releasePosition(Queue<Position> positions){
+
+    private SeaCreature releasePositions(Queue<Position> positions) {
         throw new UnsupportedOperationException("Not implemented yet");
     }
 
-    public int getAquariumLength(){
+    public SeaCreature releasePosition(Object position) {
+        if (position.getClass().equals(Position.class)) {
+            return releasePosition((Position) position);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public int getAquariumLength() {
         return currentAquarium.getLength();
     }
 
-    public int getAquariumHeight(){
+    public int getAquariumHeight() {
         return currentAquarium.getHeight();
     }
-    public boolean isAquariumWorking(){
+
+    public boolean isAquariumWorking() {
         return currentAquarium.isWorking();
     }
 }

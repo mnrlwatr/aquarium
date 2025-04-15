@@ -4,9 +4,10 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.fp.model.Position;
 import org.fp.model.fish.enums.Gender;
+
 import java.util.Queue;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Axolotl extends AbstractFish {
     Queue<Position> positions; // длинная рыба
 
@@ -16,8 +17,16 @@ public class Axolotl extends AbstractFish {
     }
 
     @Override
-    public Object getPosition() {
+    public Queue<Position> getPosition() {
         return positions;
+    }
+
+    @Override
+    public void setPosition(Object position) {
+        synchronized (this) {
+            this.positions = (Queue<Position>)(Queue<?>)position;
+        }
+
     }
 
     @Override

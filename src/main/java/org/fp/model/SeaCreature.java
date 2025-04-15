@@ -10,4 +10,5 @@ import lombok.experimental.FieldDefaults;
 public abstract class SeaCreature {
     volatile int lifetime; // Setter пока что вызывается только из одного потока, время в секундах.
     public abstract Object getPosition();
+    public abstract void setPosition(Object position);
 }

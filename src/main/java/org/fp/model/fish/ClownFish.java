@@ -17,8 +17,11 @@ public class ClownFish extends AbstractFish {
         this.position = position;
     }
 
-    public synchronized void setPosition(Position position) {
-        this.position = position;
+    @Override
+    public void setPosition(Object position) {
+        synchronized (this){
+            this.position=(Position) position;
+        }
     }
 
     @Override
@@ -27,7 +30,7 @@ public class ClownFish extends AbstractFish {
     }
 
     @Override
-    public Object getPosition() {
+    public Position getPosition() {
         return position;
     }
 

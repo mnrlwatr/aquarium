@@ -1,4 +1,5 @@
 package org.fp;
+import org.fp.model.fish.ClownFish;
 import org.fp.service.creation.SeaCreatureFactoryProducer;
 import org.fp.service.creation.aquarium.RandomAquariumFactory;
 import org.fp.service.managment.AquariumController;
@@ -18,7 +19,7 @@ public class Main {
         DependencyContainer.addDependency("aquariumController1", new AquariumController(aquarium1));
         DependencyContainer.addDependency("FishLifeStatistics1",new FishStatistics());
 
-        AquariumFill.fillFish(aquarium1,"ClownFish");
+        AquariumFill.fillFish(aquarium1, ClownFish.class);
         System.out.println(LINE_SEPARATOR);
         AquariumRunner aquariumRunner = new AquariumRunner(aquarium1);
         aquariumRunner.run();

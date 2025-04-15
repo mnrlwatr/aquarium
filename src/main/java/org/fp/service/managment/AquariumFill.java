@@ -16,7 +16,7 @@ public final class AquariumFill {
     private AquariumFill() {
     }
 
-    public static void fillFish(Aquarium aquarium, String type) {
+    public static void fillFish(Aquarium aquarium, Class<?> clazz) {
         // в аквариуме всегда будет минимум 200 рыб и максимум (aquarium.сapacity - 200)
         // чтобы аквариум быстро не выключалось (из-за опустошения или из-за переполнения)
         int randomFishesAmount = random.nextInt(200, (aquarium.getCapacity() - 201));
@@ -25,7 +25,7 @@ public final class AquariumFill {
         int maleCount = 0;
         int femaleCount = 0;
         for (int i = 0; i < randomFishesAmount; i++) {
-            AbstractFish fish = fishFactory.create(type);
+            AbstractFish fish = fishFactory.create(clazz);
             if (fish.isMale()) {
                 maleCount++;
             } else if (fish.isFemale()) {
@@ -33,7 +33,7 @@ public final class AquariumFill {
             }
 
             while (!aquariumController.placeSeaCreature(fish)) {
-                fish.setPosition(RandomPosition.getPosition());
+                //fish.setPosition(RandomPosition.getPosition());
             }
         }
 
